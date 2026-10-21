@@ -1,0 +1,20 @@
+# Projekt-Memory-Versionierung
+#
+# Dieses Repo sichert AUSSCHLIESSLICH die kuratierten Memory-Dateien der
+# Workspaces. Alles andere unter projects/ (Session-Transkripte *.jsonl,
+# subagents/, workflows/, Caches) bleibt bewusst draussen - das ist Bulk.
+#
+# KEIN REMOTE, BEWUSST: Projekt-Memories tragen Betriebsinterna (Server,
+# Projekt-IDs, Preise, Kunden). Das Cross-Workspace-Repo memory/ darf ein
+# privates Remote haben - dieses hier nicht. memory-auto-commit.sh pusht es
+# nie, der Healthcheck meldet ein eingetragenes origin als Befund.
+#
+# Reihenfolge ist zwingend: Verzeichnisse zurueckholen macht ihren INHALT
+# wieder sichtbar, deshalb muss /*/* erneut ignorieren, bevor memory/ folgt.
+
+/*
+!/*/
+/*/*
+!/*/memory/
+!/*/memory/**
+!/.gitignore

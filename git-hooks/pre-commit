@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# pre-commit fuer die Memory-Repos (memory/, episodes/, projects/).
+# Aktiviert je Repo von install.sh: git config core.hooksPath <plugin>/git-hooks
+#
+# Zwei Pruefungen:
+#   1. Secret-Dateien (.env, *.pem, credentials.json, ...) blocken
+#   2. Index-Deckel: neue Eintragszeilen in einer MEMORY.md ueber 150 Zeichen
+#      blocken. Am Commit statt am Werkzeug, weil hier JEDER Schreibweg
+#      vorbeikommt (Bash, python, Edit). Altbestand blockt nicht.
+
+# Bei merge/rebase nicht eingreifen
+if [ -f .git/MERGE_MSG ] || [ -f .git/CHERRY_PICK_HEAD ] || [ -f .git/REBASE_HEAD ]; then
+  exit 0
+fi
+
+FORBIDDEN_PATTERN='(^|/)(\.env($|\.[^/]*$)|.*\.pem$|.*\.key$|.*\.cert$|.*\.p12$|.*\.pfx$|credentials\.json$|secrets\.json$|\.netrc$|\.aws/credentials$)'
+WHITELIST_PATTERN='\.env\.(example|template|sample|dist)$'
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$STAGED" ] && exit 0
+
+BLOCKED=$(echo "$STAGED" | grep -iE "$FORBIDDEN_PATTERN" | grep -ivE "$WHITELIST_PATTERN" || true)
+if [ -n "$BLOCKED" ]; then
+  echo ""
+  echo "BLOCKED: pre-commit hat Secret-Dateien erkannt:"
+  echo ""
+  echo "$BLOCKED" | sed 's/^/  - /'
+  echo ""
+  echo "Aktionen:"
+  echo "  - Aus Index entfernen:    git rm --cached <datei>"
+  echo "  - In .gitignore eintragen"
+  echo "  - Falls bewusst gewollt:  git commit --no-verify  (nur in Notfaellen)"
+  echo ""
+  exit 1
+fi
+
+# --- Memory-Index-Deckel ---
+if echo "$STAGED" | grep -qE '(^|/)MEMORY\.md$'; then
+  HOOKDIR=$(cd "$(dirname "$0")" && pwd)
+  if command -v node >/dev/null 2>&1; then
+    # Pathspec '*MEMORY.md': git-Wildcard deckt auch Unterordner.
+    git diff --cached -U0 --no-color -- '*MEMORY.md' | node "$HOOKDIR/memory-index-check.js" || exit 1
+  else
+    echo "WARN: node fehlt - Memory-Index-Deckel nicht geprueft." >&2
+  fi
+fi
+
+exit 0

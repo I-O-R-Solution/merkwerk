@@ -1,0 +1,12 @@
+{
+  "name": "merkwerk",
+  "owner": { "name": "Oliver Schroeder" },
+  "description": "merkwerk: Memory-Engine fuer Claude Code (Memories, Episoden, Audit-Loop).",
+  "plugins": [
+    {
+      "name": "merkwerk",
+      "source": ".",
+      "description": "Zweischichtiges Memory-System fuer Claude Code: Memories, Episoden, Trigger-Routing, Audit-Loop, Index-Deckel, Auto-Commit."
+    }
+  ]
+}

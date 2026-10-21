@@ -1,0 +1,8 @@
+{
+  "name": "merkwerk",
+  "description": "Zweischichtiges Memory-System fuer Claude Code: kuratierte Memories mit Lazy-Load-Index, Episoden pro Session, Trigger-Routing, Audit-Loop mit Promotion/Demotion, Index-Deckel und Auto-Commit in drei Git-Repos.",
+  "version": "0.1.0",
+  "author": { "name": "Oliver Schroeder" },
+  "license": "MIT",
+  "keywords": ["memory", "episodic", "audit", "hooks", "german"]
+}
