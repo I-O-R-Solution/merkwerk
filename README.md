@@ -20,7 +20,7 @@ Voraussetzungen: Claude Code, `git`, `node`, `bash` (unter Windows: Git Bash), `
 
 ```bash
 # 1. Plugin aus GitHub installieren
-claude plugin marketplace add olisconsulting-cloud/merkwerk
+claude plugin marketplace add I-O-R-Solution/merkwerk
 claude plugin install merkwerk@merkwerk
 
 # 2. Bestand anlegen (drei Repos, Vorlagen, Index-Deckel am Commit)
